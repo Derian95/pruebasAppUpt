@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { Button, FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import axios from 'axios'
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useMemo} from 'react'
 import {Modal} from './components/Modal'
 // interface CodigosEstudiantes{
 //   data:Codigos[]
@@ -49,7 +49,7 @@ import {Modal} from './components/Modal'
 export default function App() {
   const [codigos, setData] = useState<RootObject>()
   const [modal, setModal] = useState(false)
-
+  const codes=useMemo(() => codigos?.data.map(sd=>(sd.codigoUniversitario)), [codigos])
  
   useEffect(() => {
     axios.get('http://172.30.101.46:9090/api/estudiante/codigos/2010037630').then(response =>{
@@ -83,7 +83,7 @@ export default function App() {
      onPress={()=>setModal(prev=> !prev)}
      />
 
-      <Modal show={modal} codigos={lol}/>
+      <Modal show={modal} codigos={codes}/>
       <FlatList
       keyExtractor={item => item.codigoUniversitario.toString()}
       renderItem={item => <Text>{item.item.codigoUniversitario}</Text>}
