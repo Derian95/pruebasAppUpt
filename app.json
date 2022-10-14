@@ -1,5 +1,6 @@
 {
   "expo": {
+    "owner": "insert5000",
     "name": "co",
     "slug": "co",
     "version": "1.0.0",
@@ -24,10 +25,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.insert5000.co"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "35753233-df4b-45f7-9de0-3d5d34c34d03"
+      }
     }
   }
 }
