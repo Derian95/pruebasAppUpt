@@ -3,6 +3,7 @@ import { Button, FlatList, ScrollView, StyleSheet, Text, View } from 'react-nati
 import axios from 'axios'
 import {useState, useEffect, useMemo} from 'react'
 import {Modal} from './components/Modal'
+import { Semestres } from './components/Semestres';
 // interface CodigosEstudiantes{
 //   data:Codigos[]
 // }
@@ -48,18 +49,35 @@ import {Modal} from './components/Modal'
 
 export default function App() {
   const [codigos, setData] = useState<RootObject>()
+  const [newSemes, setNewSemes] = useState<Semestre[]>()
   const [modal, setModal] = useState(false)
+  const [currentNumber, setCurrentNumbee] = useState<number>(0)
+
   const codes=useMemo(() => codigos?.data.map(sd=>(sd.codigoUniversitario)), [codigos])
  
+  const newSem =()=>{
+    axios.post('http://172.30.101.46:9090/api/estudiante/semestresestudiados',{codigoUniversitario:2017058960,itemEstamento:1}).then(response =>{
+      //console.log(JSON.stringify(response))
+      //console.log(response)
+      console.log("COMO1")
+      console.log(response.data.data)
+      setNewSemes(response.data.data)
+
+    }).catch(error=> console.log(error))
+  }
+
+
   useEffect(() => {
     axios.get('http://172.30.101.46:9090/api/estudiante/codigos/2010037630').then(response =>{
-      console.log(JSON.stringify(response))
-      console.log(response)
+      //console.log(JSON.stringify(response))
+      //console.log(response)
+      console.log("COMO")
+      setCurrentNumbee(response.data.data[0].codigoUniversitario )
     setData(response.data)
 
     }).catch(error=> console.log(error))
 
-    
+    newSem()
     //setData(result)
     
    // getMoviesFromApi()
@@ -70,11 +88,13 @@ export default function App() {
   }, [])
 
   
-  const lol =codigos?.data.map(sd=>(sd.codigoUniversitario))
   
  // console.log(data)
-  console.log(codigos)
-  //console.log(lol)
+  //console.log(codigos)
+  //console.log("RAAAAAAAAAAAAAA")
+  console.log(currentNumber)
+  console.log('newSemes')
+  console.log(newSemes)
   
   return (
     <View style={styles.container}>
@@ -83,13 +103,10 @@ export default function App() {
      onPress={()=>setModal(prev=> !prev)}
      />
 
-      <Modal show={modal} codigos={codes}/>
-      <FlatList
-      keyExtractor={item => item.codigoUniversitario.toString()}
-      renderItem={item => <Text>{item.item.codigoUniversitario}</Text>}
-      data={codigos?.data}
 
-      />
+       <Semestres dataa={codigos?.data[0] as Datum} /> 
+      <Modal show={modal} codigos={codes} current={currentNumber }/>
+       
       <StatusBar style="auto" />
     </View>
   );
@@ -98,9 +115,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop:100
+    justifyContent: 'flex-start',
+    paddingVertical:50,
+    marginTop:10,
+    
   },
 });
